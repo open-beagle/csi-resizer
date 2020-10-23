@@ -1,0 +1,39 @@
+platform: 172.16.0.120
+
+workspace:
+  path: src/github.com/kubernetes-csi/external-resizer
+
+clone:
+  git:
+    image: registry.cn-qingdao.aliyuncs.com/wod/devops-git-arm64:1.0
+    pull: true
+
+pipeline:
+
+  gobuild:
+    image: registry.cn-qingdao.aliyuncs.com/wod/devops-go-arm64:1.15.2-buster
+    dns: 223.5.5.5
+    pull: true
+    volumes:
+      - /data/cache/golang/pkg/:/go/pkg/
+    binary: csi-resizer
+    main: cmd/csi-resizer
+
+  docker:
+    image: registry.cn-qingdao.aliyuncs.com/wod/devops-docker-arm64:1.0
+    dns: 223.5.5.5
+    pull: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    dockerfile: .beagle/dockerfile
+    base: registry.cn-qingdao.aliyuncs.com/wod/distroless-static-arm64:latest
+    repo: wod/csi-resizer-arm64
+    tag: v1.0.1
+    registry: registry.cn-qingdao.aliyuncs.com
+    secrets:  
+      - source: REGISTRY_USER_ALIYUN
+        target: REGISTRY_USER
+      - source: REGISTRY_PASSWORD_ALIYUN
+        target: REGISTRY_PASSWORD
+    when:
+      branch: master
