@@ -27,7 +27,7 @@ pipeline:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     dockerfile: .beagle/dockerfile
-    base: registry.cn-qingdao.aliyuncs.com/wod/distroless-static:latest
+    base: registry.cn-qingdao.aliyuncs.com/wod/distroless-base:latest
     repo: wod/csi-resizer
     tag: v1.0.1
     registry: registry.cn-qingdao.aliyuncs.com
